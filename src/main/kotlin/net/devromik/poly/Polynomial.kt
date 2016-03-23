@@ -1,5 +1,7 @@
 package net.devromik.poly
 
+import net.devromik.poly.utils.times
+
 /**
  * @author Shulnyaev Roman
  */
@@ -9,8 +11,11 @@ class Polynomial(val coeffs: Array<Double>) {
         require(coeffs.size > 0)
     }
 
+    // ****************************** //
+
     val coeffCount: Int = coeffs.size
     fun coeff(i: Int): Double = coeffs[i]
+
     val degree: Int = coeffCount - 1
 
     fun at(x: Double): Double {
@@ -27,3 +32,29 @@ class Polynomial(val coeffs: Array<Double>) {
         return r
     }
 }
+
+/* ****** Sum ****** */
+
+operator fun Polynomial.plus(that: Polynomial): Polynomial {
+    val (min, max) = if (coeffCount > that.coeffCount) that.to(this) else this.to(that)
+
+    return Polynomial(Array(
+        max.coeffCount,
+        { if (it < min.coeffCount) min.coeff(it) + max.coeff(it) else max.coeff(it) }))
+}
+
+operator fun Polynomial.plus(a: Double): Polynomial {
+    val sumCoeffs = coeffs.copyOf()
+    sumCoeffs[0] += a
+
+    return Polynomial(sumCoeffs)
+}
+
+operator fun Double.plus(p: Polynomial): Polynomial {
+    return p.plus(this)
+}
+
+/* ****** Product ****** */
+
+operator fun Polynomial.times(a: Double): Polynomial = Polynomial(coeffs * a)
+operator fun Double.times(p: Polynomial): Polynomial = p * this
