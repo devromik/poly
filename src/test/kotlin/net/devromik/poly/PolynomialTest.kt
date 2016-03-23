@@ -52,10 +52,19 @@ class PolynomialTest {
     }
 
     @Test fun canBeBuiltDeclaratively() {
-        assertArrayEquals(arrayOf(0.0, 0.0, 1.0), (X pow 2).coeffs)
-        assertArrayEquals(arrayOf(0.0, 0.0, 3.0), (3.0 * (X pow 2)).coeffs)
-        assertArrayEquals(arrayOf(0.0, 2.0), (2.0 * X).coeffs)
-        assertArrayEquals(arrayOf(0.0, 2.0, 3.0), ((X pow 2) * 3.0 + 2.0 * X).coeffs)
-        assertArrayEquals(arrayOf(1.0, 2.0, 3.0), (3.0 * (X pow 2) + X * 2.0 + 1.0).coeffs)
+        var p = X pow 2
+        assertArrayEquals(arrayOf(0.0, 0.0, 1.0), p.coeffs)
+
+        p = 3.0 * (X pow 2)
+        assertArrayEquals(arrayOf(0.0, 0.0, 3.0), p.coeffs)
+
+        p = 2.0 * X
+        assertArrayEquals(arrayOf(0.0, 2.0), p.coeffs)
+
+        p = (X pow 2) * 3.0 + 2.0 * X
+        assertArrayEquals(arrayOf(0.0, 2.0, 3.0), p.coeffs)
+
+        p = 3.0 * (X pow 2) + X * 2.0 + 1.0
+        assertArrayEquals(arrayOf(1.0, 2.0, 3.0), p.coeffs)
     }
 }
