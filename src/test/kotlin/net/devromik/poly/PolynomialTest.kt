@@ -67,4 +67,20 @@ class PolynomialTest {
         p = 3.0 * (X pow 2) + X * 2.0 + 1.0
         assertArrayEquals(arrayOf(1.0, 2.0, 3.0), p.coeffs)
     }
+
+    @Test fun twoPolynomialsCanBeMultipliedByDistributingAndCombiningTheirTerms() {
+        var a = Polynomial(arrayOf(1.0));
+        var b = Polynomial(arrayOf(2.0));
+        var product = a * b
+        var expectedProduct = Polynomial(arrayOf(2.0))
+
+        assertArrayEquals(expectedProduct.coeffs, product.coeffs)
+
+        a = -357.5 * (X pow 5) + 15.5 * (X pow 3)
+        b = -2.0 * (X pow 2) + -5.0 * X + 7.0
+        product = a * b
+        expectedProduct = 715.0 * (X pow 7) + 1787.5 * (X pow 6) + -2533.5 * (X pow 5) + -77.5 * (X pow 4) + 108.5 * (X pow 3)
+
+        assertArrayEquals(expectedProduct.coeffs, product.coeffs)
+    }
 }

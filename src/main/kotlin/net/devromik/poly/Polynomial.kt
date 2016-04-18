@@ -58,3 +58,15 @@ operator fun Double.plus(p: Polynomial): Polynomial {
 
 operator fun Polynomial.times(a: Double): Polynomial = Polynomial(coeffs * a)
 operator fun Double.times(p: Polynomial): Polynomial = p * this
+
+operator fun Polynomial.times(that: Polynomial): Polynomial {
+    var productCoeffs = Array(this.degree + that.degree + 1, { 0.0 })
+
+    for (i in 0..this.degree) {
+        for (j in 0..that.degree) {
+            productCoeffs[i + j] += this.coeff(i) * that.coeff(j)
+        }
+    }
+
+    return Polynomial(productCoeffs)
+}
