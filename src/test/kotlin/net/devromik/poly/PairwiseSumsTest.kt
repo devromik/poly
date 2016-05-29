@@ -4,7 +4,7 @@ import org.junit.Test
 import org.junit.Assert.*
 
 /**
- * @author Shulnyaev Roman (Roman.Shulnyaev@billing.ru)
+ * @author Shulnyaev Roman
  */
 class PairwiseSumsTest {
 
