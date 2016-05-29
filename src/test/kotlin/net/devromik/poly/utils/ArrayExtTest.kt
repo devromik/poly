@@ -1,5 +1,6 @@
 package net.devromik.poly.utils
 
+import net.devromik.poly.utils.MathConstants.EPSILON
 import org.junit.Assert.assertArrayEquals
 import org.junit.Test
 
@@ -8,7 +9,10 @@ import org.junit.Test
  */
 class ArrayExtTest {
 
-    @Test fun arrayOfDoubleCanBeMultipliedByDouble() {
-        assertArrayEquals(arrayOf(2.0, 4.0, 6.0), arrayOf(1.0, 2.0, 3.0) * 2.0)
+    @Test fun doubleArrayCanBeScaled() {
+        assertArrayEquals(
+            doubleArrayOf(1.0, 2.0, 3.0) * 2.0,
+            doubleArrayOf(2.0, 4.0, 6.0),
+            EPSILON)
     }
 }

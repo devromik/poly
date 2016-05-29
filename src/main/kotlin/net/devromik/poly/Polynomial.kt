@@ -1,11 +1,14 @@
 package net.devromik.poly
 
+import net.devromik.poly.utils.COMPLEX_ZERO
+import net.devromik.poly.utils.Complex
 import net.devromik.poly.utils.times
+import java.lang.Math.max
 
 /**
  * @author Shulnyaev Roman
  */
-class Polynomial(val coeffs: Array<Double>) {
+class Polynomial(val coeffs: DoubleArray) {
 
     init {
         require(coeffs.size > 0)
@@ -13,10 +16,10 @@ class Polynomial(val coeffs: Array<Double>) {
 
     // ****************************** //
 
-    val coeffCount: Int = coeffs.size
     fun coeff(i: Int): Double = coeffs[i]
 
-    val degree: Int = coeffCount - 1
+    val coeffCount: Int get() = coeffs.size
+    val degree: Int get() = coeffCount - 1
 
     fun at(x: Double): Double {
         if (coeffCount == 1) {
@@ -35,38 +38,73 @@ class Polynomial(val coeffs: Array<Double>) {
 
 /* ****** Sum ****** */
 
-operator fun Polynomial.plus(that: Polynomial): Polynomial {
-    val (min, max) = if (coeffCount > that.coeffCount) that.to(this) else this.to(that)
+operator fun Polynomial.plus(addend: Polynomial): Polynomial {
+    val (min, max) = if (coeffCount > addend.coeffCount) addend.to(this) else this.to(addend)
 
-    return Polynomial(Array(
+    return Polynomial(DoubleArray(
         max.coeffCount,
         { if (it < min.coeffCount) min.coeff(it) + max.coeff(it) else max.coeff(it) }))
 }
 
-operator fun Polynomial.plus(a: Double): Polynomial {
+operator fun Polynomial.plus(addend: Double): Polynomial {
     val sumCoeffs = coeffs.copyOf()
-    sumCoeffs[0] += a
+    sumCoeffs[0] += addend
 
     return Polynomial(sumCoeffs)
 }
 
-operator fun Double.plus(p: Polynomial): Polynomial {
-    return p.plus(this)
+operator fun Double.plus(addend: Polynomial): Polynomial {
+    return addend + this
 }
 
 /* ****** Product ****** */
 
-operator fun Polynomial.times(a: Double): Polynomial = Polynomial(coeffs * a)
-operator fun Double.times(p: Polynomial): Polynomial = p * this
+operator fun Polynomial.times(factor: Double): Polynomial = Polynomial(coeffs * factor)
+operator fun Double.times(factor: Polynomial): Polynomial = factor * this
 
-operator fun Polynomial.times(that: Polynomial): Polynomial {
-    var productCoeffs = Array(this.degree + that.degree + 1, { 0.0 })
+operator fun Polynomial.times(factor: Polynomial): Polynomial {
+    val productCoeffs = DoubleArray(degree + factor.degree + 1, { 0.0 })
 
-    for (i in 0..this.degree) {
-        for (j in 0..that.degree) {
-            productCoeffs[i + j] += this.coeff(i) * that.coeff(j)
+    for (i in 0..degree) {
+        for (j in 0..factor.degree) {
+            productCoeffs[i + j] += coeff(i) * factor.coeff(j)
         }
     }
 
     return Polynomial(productCoeffs)
+}
+
+fun Polynomial.multFFT(factor: Polynomial): Polynomial {
+    val maxCoeffCount = max(coeffCount, factor.coeffCount);
+    var auxiliaryCoeffCount = 1
+
+    while (auxiliaryCoeffCount < maxCoeffCount) {
+        if (auxiliaryCoeffCount > Int.MAX_VALUE / 4) {
+            throw IllegalArgumentException("Overflow")
+        }
+
+        auxiliaryCoeffCount = auxiliaryCoeffCount.shl(1)
+    }
+
+    auxiliaryCoeffCount = auxiliaryCoeffCount.shl(1);
+
+    val a = Array(
+        auxiliaryCoeffCount,
+        { if (it < coeffCount) Complex(coeff(it)) else COMPLEX_ZERO })
+
+    fft(a, false)
+
+    val b = Array(
+        auxiliaryCoeffCount,
+        { if (it < factor.coeffCount) Complex(factor.coeff(it)) else COMPLEX_ZERO })
+
+    fft(b, false)
+
+    for (i in 0..auxiliaryCoeffCount - 1) {
+        a[i] *= b[i]
+    }
+
+    fft(a, true)
+
+    return Polynomial(DoubleArray(degree + factor.degree + 1, { a[it].re }))
 }

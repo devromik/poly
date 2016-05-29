@@ -3,6 +3,6 @@ package net.devromik.poly.utils
 /**
  * @author Shulnyaev Roman
  */
-operator fun Array<Double>.times(a: Double): Array<Double> {
-    return Array(size, { this[it] * a })
+operator fun DoubleArray.times(scaleFactor: Double): DoubleArray {
+    return DoubleArray(size, { this[it] * scaleFactor })
 }
