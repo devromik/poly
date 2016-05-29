@@ -16,6 +16,10 @@ class Polynomial(val coeffs: DoubleArray) {
 
     // ****************************** //
 
+    fun setCoeff(i: Int, c: Double) {
+        coeffs[i] = c
+    }
+
     fun coeff(i: Int): Double = coeffs[i]
 
     val coeffCount: Int get() = coeffs.size
@@ -33,6 +37,18 @@ class Polynomial(val coeffs: DoubleArray) {
         }
 
         return r
+    }
+
+    override fun toString(): String {
+        return coeffs.reversed().mapIndexed {
+            i, c ->
+                when {
+                    c.compareTo(0.0) == 0 -> "-"
+                    i < degree - 1 -> if (c.compareTo(1.0) == 0) "X^${degree - i}" else "$c * X^${degree - i}"
+                    i == degree - 1 -> if (c.compareTo(1.0) == 0) "X" else "$c * X"
+                    else -> "$c"
+                }
+        }.filter { it != "-" }.joinToString(separator = " + ")
     }
 }
 

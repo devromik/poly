@@ -52,7 +52,10 @@ class PolynomialTest {
     }
 
     @Test fun canBeBuiltDeclaratively() {
-        var p = X pow 2
+        var p = X pow 0
+        assertArrayEquals(doubleArrayOf(1.0), p.coeffs, EPSILON)
+
+        p = X pow 2
         assertArrayEquals(doubleArrayOf(0.0, 0.0, 1.0), p.coeffs, EPSILON)
 
         p = 3.0 * (X pow 2)
@@ -66,6 +69,17 @@ class PolynomialTest {
 
         p = 3.0 * (X pow 2) + X * 2.0 + 1.0
         assertArrayEquals(doubleArrayOf(1.0, 2.0, 3.0), p.coeffs, EPSILON)
+    }
+
+    @Test fun canBeConvertedToString() {
+        var p = X pow 1
+        assertEquals("X", p.toString());
+
+        p = (X pow 2) * 3.0 + 2.0 * X
+        assertEquals("3.0 * X^2 + 2.0 * X", p.toString());
+
+        p = (X pow 2) + 2.0 * X + 1.0
+        assertEquals("X^2 + 2.0 * X + 1.0", p.toString());
     }
 
     @Test fun twoPolynomialsCanBeMultiplied() {
