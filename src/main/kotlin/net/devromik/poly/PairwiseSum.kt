@@ -28,10 +28,10 @@ fun pairwiseSumOfNonNegativeArrays(a1: IntArrayList, a2: IntArrayList): IntArray
         return poly
     }
 
-    val productAB = polyOf(a1).multFFT(polyOf(a2))
+    val product = polyOf(a1).multFFT(polyOf(a2))
 
     val s = IntArrayList()
-    productAB.coeffs.forEachIndexed() { i, c -> if (floor(c + 0.5) > EPSILON) s.add(i) }
+    product.coeffs.forEachIndexed() { i, c -> if (floor(c + 0.5) > EPSILON) s.add(i) }
 
     return s
 }
