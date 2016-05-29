@@ -1,6 +1,6 @@
 package net.devromik.poly
 
-import net.devromik.poly.utils.MathConstants.EPSILON
+import net.devromik.poly.utils.MathConstant.EPSILON
 import org.junit.Assert.*
 import org.junit.Test
 
